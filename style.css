@@ -107,11 +107,11 @@ article.resume h2 {
 }
 
 .profile-photo {
-  width: 100%; /* Makes the image adapt to the parent container's width */
-  max-width: 400px; /* Restricts the image to a reasonable maximum size */
+  width: 100%; 
+  max-width: 400px;
   min-width: 300px;
-  height: auto; /* Maintains the aspect ratio */
-  margin: 10px auto; /* Centers the image and adds space around it */
+  height: auto;
+  margin: 10px auto; 
 }
 
 /* Add media query for smaller screens */
