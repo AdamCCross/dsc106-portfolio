@@ -105,3 +105,18 @@ article.resume h2 {
   border-bottom-style: solid;
   border-bottom-color: oklch(80% 3% 200);
 }
+
+.profile-photo {
+  width: 100%; /* Makes the image adapt to the parent container's width */
+  max-width: 400px; /* Restricts the image to a reasonable maximum size */
+  min-width: 300px;
+  height: auto; /* Maintains the aspect ratio */
+  margin: 10px auto; /* Centers the image and adds space around it */
+}
+
+/* Add media query for smaller screens */
+@media (max-width: 600px) {
+  .profile-photo {
+    max-width: 150px; /* Further reduce size on smaller screens */
+  }
+}
