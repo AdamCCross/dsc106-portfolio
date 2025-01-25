@@ -6,27 +6,12 @@ function $$(selector, context = document) {
 
 //// Create Naviation in JS ////
 
-console.log("hostname: ", window.location.hostname);
-// Set base URL dynamically based on hostname
-let baseElement = document.createElement("base");
-if (
-    window.location.hostname === "127.0.0.1" ||
-    window.location.hostname === "localhost"
-) {
-    baseElement.setAttribute('href', '/'); // Development environment
-} else {
-    baseElement.setAttribute('href', '/dsc106-portfolio/'); // Production environment
-}
-document.head.appendChild(baseElement);
-
-console.log("Base URL:", baseElement.href);
-
 // create pages
 let pages = [
     { url: '', title: 'Home'},
-    { url: 'projects/', title: 'Projects'},
-    { url: 'resume/', title: 'Resume'},
-    { url: 'contact/', title: 'Contact'},
+    { url: '/dsc106-portfolio/projects/', title: 'Projects'},
+    { url: '/dsc106-portfolio/resume/', title: 'Resume'},
+    { url: '/dsc106-portfolio/contact/', title: 'Contact'},
     { url: 'https://github.com/AdamCCross', title: 'Github'},
 ]
 
