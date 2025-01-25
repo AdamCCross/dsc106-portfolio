@@ -6,6 +6,21 @@ function $$(selector, context = document) {
 
 //// Create Naviation in JS ////
 
+console.log("hostname: ", window.location.hostname);
+// Set base URL dynamically based on hostname
+let baseElement = document.createElement("base");
+if (
+    window.location.hostname === "127.0.0.1" ||
+    window.location.hostname === "localhost"
+) {
+    baseElement.setAttribute('href', '/'); // Development environment
+} else {
+    baseElement.setAttribute('href', '/dsc106-portfolio/'); // Production environment
+}
+document.head.appendChild(baseElement);
+
+console.log("Base URL:", baseElement.href);
+
 // create pages
 let pages = [
     { url: '', title: 'Home'},
