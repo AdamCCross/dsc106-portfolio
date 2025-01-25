@@ -1,5 +1,17 @@
 :root {
-  --color-accent: oklch(50% 30% 120);
+  --color-accent: oklch(50% 30% 120 / 40%);
+  --border-color: oklch(50% 10% 200 / 40%)
+}
+
+html {
+  color-scheme: light dark;
+}
+
+label.color-scheme {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 80%;
 }
 
 body {
@@ -18,7 +30,7 @@ nav {
   margin-bottom: auto;
   border-bottom-width: 1px;
   border-bottom-style: solid;
-  border-bottom-color: oklch(80% 3% 200);
+  border-bottom-color: var(--border-color);
 }
 
 nav ul {
@@ -40,17 +52,17 @@ nav a {
 nav a.current {
   border-bottom-width: 0.4em;
   border-bottom-style: solid;
-  border-bottom-color: oklch(80% 3% 200);
+  border-bottom-color: var(--border-color);
 }
 
 a:hover {
   border-bottom-width: 0.4em;
   border-bottom-style: solid;
   border-bottom-color: var(--color-accent);
-  background-color: oklch(from var(--color-accent) 95% 5% h);
+  background-color: color-mix(in oklch, var(--color-accent), canvas 85%);
 }
 
-input, textarea, button {
+input, textarea, button, select {
   font: inherit;
   /* display: block;
   width: 100%;
@@ -103,7 +115,7 @@ h1, h2, h3, h4, h5, h6 {
 article.resume h2 {
   border-bottom-width: 0.4em;
   border-bottom-style: solid;
-  border-bottom-color: oklch(80% 3% 200);
+  border-bottom-color: var(--border-color);
 }
 
 .profile-photo {

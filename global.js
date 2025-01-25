@@ -41,3 +41,33 @@ for (let p of pages) {
         a.target = "_blank";
       }
 }
+
+//// Add Light and Dark Modes ////
+document.body.insertAdjacentHTML(
+    'afterbegin',
+    `
+      <label class="color-scheme">
+          Theme:
+          <select>
+            <option value="light dark">Automatic</option>
+            <option value="light">light</option>
+            <option value="dark">dark</option>
+          </select>
+      </label>`
+  );
+
+const select = document.querySelector('.color-scheme select');
+
+select.addEventListener('input', function (event) {
+    console.log('color scheme changed to', event.target.value);
+    document.documentElement.style.setProperty('color-scheme', event.target.value);
+    localStorage.colorScheme = event.target.value
+  });
+
+if (localStorage.colorScheme) {
+    // Apply the stored color scheme
+    const storedScheme = localStorage.colorScheme;
+    document.documentElement.style.setProperty('color-scheme', storedScheme);
+    select.value = storedScheme; // Update the select element to match
+    updateTheme(storedScheme); // Apply the theme classes to body
+}
