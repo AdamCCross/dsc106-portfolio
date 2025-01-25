@@ -56,7 +56,7 @@ document.body.insertAdjacentHTML(
       </label>`
   );
 
-const select = document.querySelector('.color-scheme select');
+let select = document.querySelector('.color-scheme select');
 
 select.addEventListener('input', function (event) {
     console.log('color scheme changed to', event.target.value);
@@ -69,5 +69,32 @@ if (localStorage.colorScheme) {
     const storedScheme = localStorage.colorScheme;
     document.documentElement.style.setProperty('color-scheme', storedScheme);
     select.value = storedScheme; // Update the select element to match
-    updateTheme(storedScheme); // Apply the theme classes to body
 }
+
+//// Contact Form ////
+
+let form = document.querySelector('form');
+
+form?.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    let data = new FormData(form);
+    let url = form.action
+    let queryParams = [];
+
+    // Iterate over each form field and build the query parameters
+    for (let [name, value] of data) {
+        // TODO build URL parameters here
+        queryParams.push(`${encodeURIComponent(name)}=${encodeURIComponent(value)}`);
+      }
+
+    // Join the parameters with "&"
+    if (queryParams.length > 0) {
+        url += "?" + queryParams.join("&");
+    }
+
+    console.log("Generated URL:", url); // Log the generated URL for inspection
+    
+    location.href = url;
+    console.log('Form submitted');
+});

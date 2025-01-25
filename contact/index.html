@@ -5,18 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
     <link rel="stylesheet" href="../style.css">
-    <script type="module" src="../global.js"></script>
 </head>
 <body>
     <h1>Contact</h1>
-    <form action="mailto:across@ucsd.edu" method="POST" enctype="text/plain">
-        <label for="email:">Email: 
-            <input name="email" type="email"></label>
+
+    <form action="mailto:across@ucsd.edu" method="GET">
         <label for="subject">Subject: 
             <input name="subject"></label>
         <label for="body">Body: 
             <textarea name="body"></textarea></label>
-        <button>Submit</button>
+        <button type="submit">Submit</button>
     </form>
+    <script type="module" src="../global.js"></script>
 </body>
 </html>
