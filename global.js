@@ -98,3 +98,70 @@ form?.addEventListener('submit', function (event) {
     location.href = url;
     console.log('Form submitted');
 });
+
+//// Importing Project Data into Projects Page ////
+export async function fetchJSON(url) {
+  try {
+      // Fetch the JSON file from the given URL
+      const response = await fetch(url);
+      console.log(response);
+      // Check if fetch request was successful
+      if (!response.ok) {
+        throw new Error(`Failed to fetch projects: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data; 
+
+
+  } catch (error) {
+      console.error('Error fetching or parsing JSON data:', error);
+      return [];// Return an empty array to prevent undefined errors
+  }
+}
+
+/// dynamically generate and display project content throughout site func
+export function renderProjects(projects, containerElement, headingLevel = 'h2') {
+  // Ensure containerElement is a valid DOM element
+  if (!containerElement || !(containerElement instanceof HTMLElement)) {
+    console.error("Invalid container element provided.");
+    return;
+  }
+  // Validate headingLevel (ensure it's a valid heading tag)
+  const validHeadings = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+  if (!validHeadings.includes(headingLevel)) {
+      console.warn(`Invalid heading level "${headingLevel}". Defaulting to "h2".`);
+      headingLevel = 'h2';
+  }
+  // Clear existing content to avoid duplication
+  containerElement.innerHTML = '';
+
+  // Check if there are any projects to render
+  if (projects.length === 0) {
+    const placeholderMessage = document.createElement('p');
+    placeholderMessage.textContent = 'No projects available at the moment. Please check back later!';
+    containerElement.appendChild(placeholderMessage);
+    return;
+  }
+
+  // Loop through each project and create an article element
+  projects.forEach(project => {
+    // Validate project data
+    if (!project || !project.title || !project.description) {
+        console.warn("Skipping invalid project:", project);
+        return;
+    }
+    // Create article element
+    const article = document.createElement('article');
+
+    // Add project details to article 
+    article.innerHTML = `
+      <${headingLevel}>${project.title}</${headingLevel}>
+      ${project.image ? `<img src="${project.image}" alt="${project.title}">` : ''}
+      <p>${project.description}</p>
+    `;
+    // Append the article to container
+    containerElement.appendChild(article);
+  });
+}
+
+//// Loading data from Github API ////
