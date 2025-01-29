@@ -126,6 +126,32 @@ article.resume h2 {
   margin: 10px auto; 
 }
 
+#profile-stats dl {
+  display: grid;
+  grid-column: 1fr, 1fr, 1fr, 1fr;
+  grid-gap: 10px;
+}
+
+#profile-stats dt {
+  grid-column: span 1; /* Each dt takes 1 column */
+}
+
+#profile-stats dd {
+  grid-column: span 1; /* Each dd takes 1 column */
+  margin: 0; /* Remove default margins */
+}
+
+#profile-stats dl dt:nth-child(odd) {
+  grid-row: 1; /* Ensure dt elements are placed in the first row */
+  text-transform: uppercase;
+  color: gray;
+}
+
+#profile-stats dl dd:nth-child(even) {
+  grid-row: 2; /* Ensure dd elements are placed in the second row */
+  font-size: 200%;
+}
+
 /* Add media query for smaller screens */
 @media (max-width: 600px) {
   .profile-photo {

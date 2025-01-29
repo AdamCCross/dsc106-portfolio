@@ -104,7 +104,6 @@ export async function fetchJSON(url) {
   try {
       // Fetch the JSON file from the given URL
       const response = await fetch(url);
-      console.log(response);
       // Check if fetch request was successful
       if (!response.ok) {
         throw new Error(`Failed to fetch projects: ${response.statusText}`);
@@ -165,3 +164,6 @@ export function renderProjects(projects, containerElement, headingLevel = 'h2') 
 }
 
 //// Loading data from Github API ////
+export async function fetchGitHubData(username) {
+  return fetchJSON(`https://api.github.com/users/${username}`);
+}
