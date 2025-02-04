@@ -60,8 +60,7 @@ function renderPieChart(projectsGiven) {
         console.error("SVG container not found!");
     } else {
         newArcs.forEach((arc, idx) => {
-            d3.select('svg')
-            .append('path')
+            newSVG.append('path')
             .attr('d', arc)
             .attr("fill", colors(idx))
         });

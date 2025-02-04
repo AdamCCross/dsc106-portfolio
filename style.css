@@ -167,6 +167,8 @@ article.resume h2 {
 
 /* svg styling */
 svg {
+  width: 100%;
+  height: auto;
   max-width: 20em;
   margin-block: 2em;
 
