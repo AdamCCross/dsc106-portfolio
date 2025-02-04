@@ -42,6 +42,7 @@ let sliceGenerator = d3.pie().value((d) => d.value);
 let arcData = sliceGenerator(data);
 let arcs = arcData.map((d) => arcGenerator(d));
 
+const svg = d3.select('svg');
 if (svg.empty()) {
     console.error("SVG container not found!");
 } else {
