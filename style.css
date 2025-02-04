@@ -203,12 +203,31 @@ span.swatch {
   display: flex;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
 }
 
 .container {
   display: flex;
   align-items: center;
   gap: 40px;
+}
+
+/* Highlighting hovered chart wedges */
+&:has(path:hover) {
+  path:not(:hover) {
+    opacity: 0.5;
+  }
+}
+path {
+  transition: 300ms;
+  cursor: pointer;
+}
+.selected {
+  --color: oklch(60% 45% 0) !important;
+
+  &:is(path) {
+    fill: var(--color);
+  }
 }
 
 /* Search bar */

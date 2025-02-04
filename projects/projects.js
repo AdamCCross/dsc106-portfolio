@@ -26,6 +26,8 @@ async function loadProjects() {
 
 ////// Build pie chart ///////
 function renderPieChart(projectsGiven) {
+    let selectedIndex = -1;
+
     // re-calculate rolled data
     let newRolledData = d3.rollups(
         projectsGiven,
@@ -61,8 +63,18 @@ function renderPieChart(projectsGiven) {
     } else {
         newArcs.forEach((arc, idx) => {
             newSVG.append('path')
-            .attr('d', arc)
-            .attr("fill", colors(idx))
+                .attr('d', arc)
+                .attr("fill", colors(idx))
+                .attr('data-index', idx)
+                .on('click', function() {
+                    selectedIndex = selectedIndex === idx ? -1 : idx;
+                    
+                    newSVG.selectAll('path')
+                        .attr('class', (_, idx) => idx === selectedIndex ? 'selected' : '');
+                    
+                    newLegend.selectAll('li')
+                        .attr('class', (_, idx) => idx === selectedIndex ? 'legend-item selected' : 'legend-item');
+              });
         });
     }
     // Add legend
@@ -73,7 +85,16 @@ function renderPieChart(projectsGiven) {
             newLegend.append('li')
                 .attr('style', `--color:${colors(idx)}`) // set the style attribute while passing in parameters
                 .attr('class', `legend-item`)
-                .html(`<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`); // set the inner html of <li>
+                .html(`<span class="swatch"></span> ${d.label} <em>(${d.value})</em>`) // set the inner html of <li>
+                .on('click', function() {
+                    selectedIndex = selectedIndex === idx ? -1 : idx;
+                    
+                    newSVG.selectAll('path')
+                        .attr('class', (_, idx) => idx === selectedIndex ? 'selected' : '');
+                    
+                    newLegend.selectAll('li')
+                        .attr('class', (_, idx) => idx === selectedIndex ? 'legend-item selected' : 'legend-item');
+              });
         });
     }
 }
@@ -82,11 +103,22 @@ let projects = await fetchJSON('../lib/projects.json'); // fetch your project da
 renderPieChart(projects)
 loadProjects();
 
+////// Chart Filtering //////'
+if (selectedIndex === -1) {
+    renderProjects(projects, projectsContainer, 'h2');
+  } else {
+    // TODO: filter projects and project them onto webpage
+    // Hint: `.label` might be useful
+    let selectedYear = newData[selectedIndex].label;
+    let filteredProjects = projects.filter(project => project.year == selectedYear);
+    renderProjects(filteredProjects, projectsContainer)
+  }
+
 ////// Build Project Search ///////
 let query = '';
 let searchInput = document.querySelector('.searchBar');
 let projectsContainer = document.querySelector('.projects');
-searchInput.addEventListener('input', (event) => {
+searchInput.addEventListener('change', (event) => {
   // update query value
   query = event.target.value;
   // filter projects
