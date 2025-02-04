@@ -103,6 +103,12 @@ div.projects article h2 {
   margin: 0;
 }
 
+div.projects article p.year {
+  font-family: Baskerville;
+  font-variant-numeric: oldstyle-nums;
+  color: gray;
+}
+
 h1 {
   font-size: 400%;
 }
