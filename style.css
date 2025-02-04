@@ -204,3 +204,13 @@ span.swatch {
   align-items: center;
   gap: 40px;
 }
+
+/* Search bar */
+.searchBar {
+  display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-bottom: 30px;
+    box-sizing: border-box;  /* Ensure padding is included in width calculation */
+}
