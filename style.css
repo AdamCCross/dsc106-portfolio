@@ -163,6 +163,9 @@ article.resume h2 {
   .profile-photo {
     max-width: 150px; /* Further reduce size on smaller screens */
   }
+  svg {
+    max-width: 90%;
+  }
 }
 
 /* svg styling */
@@ -171,6 +174,7 @@ svg {
   height: auto;
   max-width: 20em;
   margin-block: 2em;
+  display: block;
 
   /* Do not clip shapes outside the viewBox */
   overflow: visible;
