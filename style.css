@@ -164,3 +164,43 @@ article.resume h2 {
     max-width: 150px; /* Further reduce size on smaller screens */
   }
 }
+
+/* svg styling */
+svg {
+  max-width: 20em;
+  margin-block: 2em;
+
+  /* Do not clip shapes outside the viewBox */
+  overflow: visible;
+}
+
+/* Make the swatch look like a swatch for projects pie chart */
+span.swatch {
+  display: inline-flex;
+  width: 1em;
+  height: 1em;
+  background-color: var(--color);
+  border-radius: 50%;
+}
+/* Make chart legend look like a legend */
+.legend {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 5px;
+  border: 1px solid;
+  padding: 15px;
+  margin-bottom: 30px;
+  flex: 1;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
