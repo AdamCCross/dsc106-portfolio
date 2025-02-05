@@ -1,6 +1,10 @@
 import { fetchJSON, renderProjects } from '../global.js';
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
+/// Global Variables
+let globalIndex = -1;
+let globalNewData = [];
+
 // Fetch project data
 async function loadProjects() {
     try {
@@ -26,7 +30,7 @@ async function loadProjects() {
 
 ////// Build pie chart ///////
 function renderPieChart(projectsGiven) {
-    let selectedIndex = -1;
+    let selectedIndex = -1
 
     // re-calculate rolled data
     let newRolledData = d3.rollups(
@@ -39,6 +43,7 @@ function renderPieChart(projectsGiven) {
     let newData = newRolledData.map(([year, count]) => {
         return { value: count, label: year };
       });
+    globalNewData = newData;
 
     // Define arc generator and color scale
     let arcGenerator = d3.arc().innerRadius(0).outerRadius(50);
@@ -74,6 +79,8 @@ function renderPieChart(projectsGiven) {
                     
                     newLegend.selectAll('li')
                         .attr('class', (_, idx) => idx === selectedIndex ? 'legend-item selected' : 'legend-item');
+                    
+                    globalIndex = selectedIndex;
 
                     filterAndRenderProjects(projectsGiven, selectedIndex, newData)
               });
@@ -97,6 +104,8 @@ function renderPieChart(projectsGiven) {
                     newLegend.selectAll('li')
                         .attr('class', (_, idx) => idx === selectedIndex ? 'legend-item selected' : 'legend-item');
 
+                    globalIndex = selectedIndex;
+                    
                     filterAndRenderProjects(projectsGiven, selectedIndex, newData)
               });
         });
@@ -124,15 +133,27 @@ function filterAndRenderProjects(projectsGiven, selectedIndex, newData) {
 let query = '';
 let searchInput = document.querySelector('.searchBar');
 let projectsContainer = document.querySelector('.projects');
+
 searchInput.addEventListener('input', (event) => {
   // update query value
   query = event.target.value;
   // filter projects
-  let filteredProjects = projects.filter((project) => {
-    let values = Object.values(project).join('\n').toLowerCase();
-    return values.includes(query.toLowerCase());
-  });
-  // render filtered projects
-  renderProjects(filteredProjects, projectsContainer, 'h2');
-  renderPieChart(filteredProjects)
+  if (globalIndex === -1) {
+    let filteredProjects = projects.filter((project) => {
+        let values = Object.values(project).join('\n').toLowerCase();
+        return values.includes(query.toLowerCase());
+      });
+    // render filtered projects
+    renderProjects(filteredProjects, projectsContainer, 'h2');
+    renderPieChart(filteredProjects)
+  } else {
+    const selectedYear = globalNewData[globalIndex].label;
+    let filteredProjects = projects.filter(project => project.year === selectedYear);
+    filteredProjects = filteredProjects.filter((project) => {
+        let values = Object.values(project).join('\n').toLowerCase();
+        return values.includes(query.toLowerCase());
+      });
+    // render filtered projects
+    renderProjects(filteredProjects, projectsContainer, 'h2');
+  }
 });
