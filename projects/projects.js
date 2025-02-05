@@ -74,6 +74,8 @@ function renderPieChart(projectsGiven) {
                     
                     newLegend.selectAll('li')
                         .attr('class', (_, idx) => idx === selectedIndex ? 'legend-item selected' : 'legend-item');
+
+                    filterAndRenderProjects(projectsGiven, selectedIndex, newData)
               });
         });
     }
@@ -94,6 +96,8 @@ function renderPieChart(projectsGiven) {
                     
                     newLegend.selectAll('li')
                         .attr('class', (_, idx) => idx === selectedIndex ? 'legend-item selected' : 'legend-item');
+
+                    filterAndRenderProjects(projectsGiven, selectedIndex, newData)
               });
         });
     }
@@ -103,22 +107,24 @@ let projects = await fetchJSON('../lib/projects.json'); // fetch your project da
 renderPieChart(projects)
 loadProjects();
 
-////// Chart Filtering //////'
-if (selectedIndex === -1) {
-    renderProjects(projects, projectsContainer, 'h2');
-  } else {
-    // TODO: filter projects and project them onto webpage
-    // Hint: `.label` might be useful
-    let selectedYear = newData[selectedIndex].label;
-    let filteredProjects = projects.filter(project => project.year == selectedYear);
-    renderProjects(filteredProjects, projectsContainer)
-  }
+// Function to filter and render projects based on selected year
+function filterAndRenderProjects(projectsGiven, selectedIndex, newData) {
+    const projectsContainer = document.querySelector('.projects');
+    
+    if (selectedIndex === -1) {
+        renderProjects(projectsGiven, projectsContainer, 'h2');
+    } else {
+        const selectedYear = newData[selectedIndex].label;
+        const filteredProjects = projectsGiven.filter(project => project.year === selectedYear);
+        renderProjects(filteredProjects, projectsContainer, 'h2');
+    }
+}
 
 ////// Build Project Search ///////
 let query = '';
 let searchInput = document.querySelector('.searchBar');
 let projectsContainer = document.querySelector('.projects');
-searchInput.addEventListener('change', (event) => {
+searchInput.addEventListener('input', (event) => {
   // update query value
   query = event.target.value;
   // filter projects
