@@ -132,6 +132,7 @@ article.resume h2 {
   margin: 10px auto; 
 }
 
+/* Style Github Profile Stats */
 #profile-stats dl {
   display: grid;
   grid-column: 1fr, 1fr, 1fr, 1fr;
@@ -170,9 +171,8 @@ article.resume h2 {
 
 /* svg styling */
 svg {
-  width: 100%;
+  width: auto;
   height: auto;
-  max-width: 20em;
   margin-block: 2em;
   display: block;
 
@@ -238,4 +238,133 @@ path {
     font-size: 16px;
     margin-bottom: 30px;
     box-sizing: border-box;  /* Ensure padding is included in width calculation */
+}
+
+/* Style Meta Stats */
+#stats dl {
+  display: grid;
+  grid-column: 1fr, 1fr, 1fr, 1fr;
+  grid-gap: 10px;
+}
+
+#stats dt {
+  grid-column: span 1; /* Each dt takes 1 column */
+}
+
+#stats dd {
+  grid-column: span 1; /* Each dd takes 1 column */
+  margin: 0; /* Remove default margins */
+}
+
+#stats dl dt:nth-child(odd) {
+  grid-row: 1; /* Ensure dt elements are placed in the first row */
+  text-transform: uppercase;
+  color: gray;
+}
+
+#stats dl dd:nth-child(even) {
+  grid-row: 2; /* Ensure dd elements are placed in the second row */
+  font-size: 200%;
+}
+
+/* Syle Meta Scatterplot */
+#chart {
+  width: 100%;      /* Allow it to expand */
+  max-width: none;  /* Prevent it from shrinking */
+  overflow: visible;
+}
+
+.gridlines {
+  color: lightgray;
+}
+
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5em 1em;
+  margin: 0;
+}
+
+dl.info dt {
+  font-weight: normal;
+  color: #666; /* Make labels less prominent */
+  transition-duration: 500ms;
+  transition-property: opacity, visibility;
+}
+
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+dl.info dd {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* Style for .tooltip */
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 2px 2px 10px #666;
+  color: black;
+  backdrop-filter: blur(5px);
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  font-size: 0.9em;
+  display: none; /* Initially hidden */
+}
+
+circle {
+  transition: 200ms;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+circle:hover {
+  transform: scale(1.5);
+}
+
+/* Style chart brusk selection */
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8; /* 5 + 3 */
+  }
+}
+
+.selection {
+  fill-opacity: 0.1;
+  stroke: black;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;
+  animation: marching-ants 2s linear infinite;
+}
+
+circle.selected {
+  fill: #ff6b6b;
+}
+
+/* Style Language-Breakdown */
+#language-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));;
+  gap: 10px;
+  text-align: center;
+  padding: 10px;
+}
+
+#language-breakdown dt {
+  grid-row: 1;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: gray;
+  padding-bottom: 5px;
+}
+
+#language-breakdown dd {
+  grid-row: 2;
+  font-size: 0.9em;
+  margin: 0;
 }
