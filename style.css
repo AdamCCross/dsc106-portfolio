@@ -368,3 +368,23 @@ circle.selected {
   font-size: 0.9em;
   margin: 0;
 }
+
+
+/* Style for Meta page slider */
+#commit-filter {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+#commit-filter label {
+  width: 100%;
+}
+
+#commit-filter time {
+  margin-left: auto;
+}
+
+.hidden {
+  display: none; /* Hide filtered-out commits */
+}

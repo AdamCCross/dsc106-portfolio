@@ -7,6 +7,11 @@ let selectedCommits = [];
 let xScale;
 let yScale;
 
+// Variables for filtering UI
+let commitProgress = 100;
+let timeScale; // Declare globally
+let commitMaxTime;
+
 // Load data function
 async function loadData() {
     data = await d3.csv('loc.csv', (row) => ({
@@ -51,7 +56,15 @@ function processCommits() {
             });
 
             return ret;
-        });
+    });
+    // Initialize timeScale only after commits is populated
+    timeScale = d3.scaleTime()
+        .domain([d3.min(commits, d => d.datetime), d3.max(commits, d => d.datetime)])
+        .range([0, 100]);
+
+    // Update commitMaxTime based on initial commitProgress
+    commitMaxTime = timeScale.invert(commitProgress);
+    
 }
 
 function displayStats() {
@@ -261,7 +274,7 @@ function updateLanguageBreakdown() {
       container.innerHTML = '';
       return;
     }
-    
+
     const requiredCommits = selectedCommits.length ? selectedCommits : commits;
     const lines = requiredCommits.flatMap((d) => d.lines);
   
@@ -288,11 +301,39 @@ function updateLanguageBreakdown() {
     return breakdown;
 }
 
+// Function to update the commit time based on the slider
+function updateCommitFilter(value) {
+    commitProgress = value;
+    commitMaxTime = timeScale.invert(commitProgress);
+
+    // Update the displayed time
+    const formattedTime = commitMaxTime.toLocaleString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true, // Ensures AM/PM format
+    }).replace(',', ' at'); // Replace the default comma with "at" for readability
+
+    // Update the displayed time
+    d3.select("#selectedTime").text(formattedTime);
+
+    // Filter commits and update scatterplot
+    d3.selectAll("circle")
+        .classed("hidden", d => d.datetime > commitMaxTime);
+}
+
 document.addEventListener('DOMContentLoaded', async () =>{
     await loadData();
     createScatterplot();
     brushSelector();
     updateTooltipVisibility(false);
+    updateCommitFilter(commitProgress)
+    // Event listener for slider
+    d3.select("#commit-slider").on("input", function() {
+        updateCommitFilter(this.value);
+});
 });
 
 
