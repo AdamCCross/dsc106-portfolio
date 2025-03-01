@@ -314,7 +314,7 @@ function updateCommitFilter(value) {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true, // Ensures AM/PM format
-    }).replace(',', ' at'); // Replace the default comma with "at" for readability
+    });
 
     // Update the displayed time
     d3.select("#selectedTime").text(formattedTime);

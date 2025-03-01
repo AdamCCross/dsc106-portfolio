@@ -373,15 +373,24 @@ circle.selected {
 /* Style for Meta page slider */
 #commit-filter {
   display: flex;
-  align-items: baseline;
-  margin-bottom: 10px;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
 #commit-filter label {
-  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-#commit-filter time {
+#commit-slider {
+  flex-grow: 1; /* Makes the slider expand to fill available space */
+  max-width: 100%; /* Adjust width as needed */
+}
+
+#selectedTime {
   margin-left: auto;
 }
 
