@@ -13,6 +13,16 @@ let commitMaxTime;
 let lines;
 let files = [];
 
+// Scrolly Global Variables
+let NUM_ITEMS = 100; // Ideally, let this value be the length of your commit history
+let ITEM_HEIGHT = 30; // Feel free to change
+let VISIBLE_COUNT = 10; // Feel free to change as well
+let totalHeight = (NUM_ITEMS - 1) * ITEM_HEIGHT;
+const scrollContainer = d3.select('#scroll-container');
+const spacer = d3.select('#spacer');
+spacer.style('height', `${totalHeight}px`);
+const itemsContainer = d3.select('#items-container');
+
 // Load data function
 async function loadData() {
     data = await d3.csv('loc.csv', (row) => ({
@@ -364,6 +374,24 @@ function updateFileVisualization(filteredCommits) {
         .style('background', d => fileTypeColors(d.type))  // Example color for each line (adjust as needed)
 }
 
+// Show commits as we scroll through them
+function renderItems(startIndex) {
+    // Clear things off
+    itemsContainer.selectAll('div').remove();
+    const endIndex = Math.min(startIndex + VISIBLE_COUNT, commits.length);
+    let newCommitSlice = commits.slice(startIndex, endIndex);
+    // TODO: how should we update the scatterplot (hint: it's just one function call)
+    updateScatterplot(newCommitSlice)
+    // Re-bind the commit data to the container and represent each using a div
+    itemsContainer.selectAll('div')
+                  .data(newCommitSlice)
+                  .enter()
+                  .append('div')
+                //   ... // TODO: what should we include here? (read the next step)
+                  .style('position', 'absolute')
+                  .style('top', (_, idx) => `${idx * ITEM_HEIGHT}px`)
+}
+
 document.addEventListener('DOMContentLoaded', async () =>{
     await loadData();
     updateCommitFilter(commitProgress);
@@ -372,6 +400,13 @@ document.addEventListener('DOMContentLoaded', async () =>{
     d3.select("#commit-slider").on("input", function() {
         updateCommitFilter(this.value);
     });
+    // Event listener for scroller
+    scrollContainer.on('scroll', () => {
+        const scrollTop = scrollContainer.property('scrollTop');
+        let startIndex = Math.floor(scrollTop / ITEM_HEIGHT);
+        startIndex = Math.max(0, Math.min(startIndex, commits.length - VISIBLE_COUNT));
+        renderItems(startIndex);
+      });
 });
 
 
