@@ -395,3 +395,25 @@ circle.selected {
 #selectedTime {
   margin-left: auto;
 }
+
+/* File Visualization */
+
+.files {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Define two columns: one for dt, one for dd */
+  gap: 4px; /* Add space between the columns */
+}
+
+.files > div {
+  display: contents; /* Ensures that div itself does not add extra spacing */
+}
+
+.files dt {
+  grid-column: 1; /* Place dt in the first column */
+  font-weight: bold; /* Optional: Make the file name bold */
+}
+
+.files dd {
+  grid-column: 2; /* Place dd in the second column */
+  margin: 0; /* Optional: Remove margin for a cleaner look */
+}

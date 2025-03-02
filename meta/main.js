@@ -7,11 +7,11 @@ let selectedCommits = [];
 let filteredCommits;
 let xScale;
 let yScale;
-
-// Variables for filtering UI
 let commitProgress = 100;
-let timeScale; // Declare globally
+let timeScale; 
 let commitMaxTime;
+let lines;
+let files = [];
 
 // Load data function
 async function loadData() {
@@ -23,8 +23,7 @@ async function loadData() {
         date: new Date(row.date + 'T00:00' + row.timezone),
         datetime: new Date(row.datetime),
     }));
-
-    displayStats();
+    processCommits();
 }
 
 // processes Commits function
@@ -68,27 +67,24 @@ function processCommits() {
     
 }
 
-function displayStats() {
-    // Process commits first
-    processCommits();
+function displayStats(filteredCommits) {
+    // Process filteredCommits instead of all commits
+    const uniqueFiles = d3.group(filteredCommits.flatMap(d => d.lines), d => d.file).size; // Unique file count
+    const maxLineLength = d3.max(filteredCommits.flatMap(d => d.lines), d => d.length); // Longest line length
+    const maxFileLines = d3.max(d3.rollup(filteredCommits.flatMap(d => d.lines), v => v.length, d => d.file).values()); // Max file length
+    const maxFileDepth = d3.max(filteredCommits.flatMap(d => d.lines), d => d.depth); // Max file depth
 
-    // Compute statistics
-    const uniqueFiles = d3.group(data, d => d.file).size; // Unique file count
-    const maxLineLength = d3.max(data, d => d.length); // Longest line length
-    const maxFileLines = d3.max(d3.rollup(data, v => v.length, d => d.file).values()); // Max file length
-    const maxFileDepth = d3.max(data, d => d.depth); // Max file depth
-  
     // Create the dl element
-    const dl = d3.select('#stats').append('dl').attr('class', 'stats');
-  
+    const dl = d3.select('#stats').html('').append('dl').attr('class', 'stats');
+
     // Add total commits
     dl.append('dt').text('Total commits');
-    dl.append('dd').text(commits.length);
+    dl.append('dd').text(filteredCommits.length);
 
     // Add total LOC
     dl.append('dt').html('Total <abbr title="Lines of code">LOC</abbr>');
-    dl.append('dd').text(data.length);
-    
+    dl.append('dd').text(filteredCommits.flatMap(d => d.lines).length);
+
     // Add Number of files in codebase
     dl.append('dt').html('Files');
     dl.append('dd').text(uniqueFiles);
@@ -104,7 +100,6 @@ function displayStats() {
     // Maximum file depth
     dl.append('dt').html('Max Depth');
     dl.append('dd').text(maxFileDepth);
-
 }
 
 function updateScatterplot(filteredCommits) {
@@ -338,19 +333,35 @@ function updateCommitFilter(value) {
 
     // Update the displayed time
     d3.select("#selectedTime").text(formattedTime);
+
+    displayStats(filteredCommits);
+    updateScatterplot(filteredCommits);
+    updateFileVisualization(filteredCommits);
+}
+
+function updateFileVisualization(filteredCommits) {
+    lines = filteredCommits.flatMap((d) => d.lines);
+    files = d3
+        .groups(lines, (d) => d.file)
+        .map(([name, lines]) => {
+            return { name, lines };
+        });
+
+    d3.select('.files').selectAll('div').remove(); // don't forget to clear everything first so we can re-render
+    let filesContainer = d3.select('.files').selectAll('div').data(files).enter().append('div');
+        
+    filesContainer.append('dt').append('code').text(d => d.name); // TODO
+    filesContainer.append('dd').text(d => `${d.lines.length} lines`); // TODO
 }
 
 document.addEventListener('DOMContentLoaded', async () =>{
     await loadData();
-    updateScatterplot(commits);
+    updateCommitFilter(commitProgress);
     brushSelector();
-    updateTooltipVisibility(false);
-    updateCommitFilter(commitProgress)
     // Event listener for slider
     d3.select("#commit-slider").on("input", function() {
         updateCommitFilter(this.value);
-        updateScatterplot(filteredCommits)
-});
+    });
 });
 
 
