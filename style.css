@@ -415,5 +415,25 @@ circle.selected {
 
 .files dd {
   grid-column: 2; /* Place dd in the second column */
-  margin: 0; /* Optional: Remove margin for a cleaner look */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: start;
+  align-content: start;
+  gap: 0.15em;
+  padding-top: 0.6em;
+  margin-left: 0;
+}
+
+small {
+  display: block; 
+  opacity: 0.5; 
+  font-size: 0.8em;
+}
+
+.line {
+  display: flex;
+  width: 0.5em;
+  aspect-ratio: 1;
+  background: steelblue;
+  border-radius: 50%;
 }

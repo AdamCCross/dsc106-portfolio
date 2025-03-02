@@ -346,12 +346,23 @@ function updateFileVisualization(filteredCommits) {
         .map(([name, lines]) => {
             return { name, lines };
         });
+    files = d3.sort(files, (d) => -d.lines.length);
 
-    d3.select('.files').selectAll('div').remove(); // don't forget to clear everything first so we can re-render
+    d3.select('.files').selectAll('div').remove();
     let filesContainer = d3.select('.files').selectAll('div').data(files).enter().append('div');
         
-    filesContainer.append('dt').append('code').text(d => d.name); // TODO
-    filesContainer.append('dd').text(d => `${d.lines.length} lines`); // TODO
+    filesContainer.append('dt').html(d => {
+        return `<code>${d.name}</code><small>${d.lines.length} lines</small>`;
+    });
+    filesContainer.append('dd')
+        .selectAll('div')  // Create a div for each line in the file
+        .data(d => d.lines)  // Bind data to divs, where each div represents a line
+        .enter()
+        .append('div')
+        .attr('class', 'line')  // Apply the 'line' class for styling
+        .style('height', '4px')  // Example height of each line (you can adjust this)
+        .style('margin-bottom', '2px')  // Space between the lines
+        .style('background-color', '#3498db');  // Example color for each line (adjust as needed)
 }
 
 document.addEventListener('DOMContentLoaded', async () =>{
