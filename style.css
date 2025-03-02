@@ -318,9 +318,9 @@ dl.info dd {
 }
 
 circle {
-  transition: 200ms;
   transform-origin: center;
   transform-box: fill-box;
+  transition: r 0.3s ease-in-out;
 }
 
 circle:hover {
@@ -392,8 +392,4 @@ circle.selected {
 
 #selectedTime {
   margin-left: auto;
-}
-
-.hidden {
-  display: none; /* Hide filtered-out commits */
 }

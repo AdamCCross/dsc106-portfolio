@@ -4,6 +4,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 let data = [];
 let commits = [];
 let selectedCommits = [];
+let filteredCommits;
 let xScale;
 let yScale;
 
@@ -106,9 +107,9 @@ function displayStats() {
 
 }
 
-function createScatterplot() {
+function updateScatterplot(filteredCommits) {
     // Sort commits by total lines in descending order
-    const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
+    const sortedCommits = d3.sort(filteredCommits, (d) => -d.totalLines);
 
     const width = 1000;
     const height = 600;
@@ -122,13 +123,14 @@ function createScatterplot() {
         height: height - margin.top - margin.bottom,
       };
 
-    const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
+    const [minLines, maxLines] = d3.extent(filteredCommits, (d) => d.totalLines);
 
     const rScale = d3
         .scaleSqrt() // Change only this line
         .domain([minLines, maxLines])
         .range([5, 20]);
-
+    
+    d3.select('svg').remove(); // first clear the svg
     const svg = d3
         .select('#chart')
         .append('svg')
@@ -137,7 +139,7 @@ function createScatterplot() {
 
     xScale = d3
         .scaleTime()
-        .domain(d3.extent(commits, (d) => d.datetime))
+        .domain(d3.extent(filteredCommits, (d) => d.datetime))
         .range([usableArea.left, usableArea.right])
         .nice();
 
@@ -147,8 +149,10 @@ function createScatterplot() {
         .range([usableArea.bottom, usableArea.top])
         .nice();
 
+    svg.selectAll('g').remove(); // clear the scatters in order to re-draw the dots
     const dots = svg.append('g').attr('class', 'dots');
 
+    dots.selectAll('circle').remove();
     dots
         .selectAll('circle')
         .data(sortedCommits)
@@ -305,6 +309,7 @@ function updateLanguageBreakdown() {
 function updateCommitFilter(value) {
     commitProgress = value;
     commitMaxTime = timeScale.invert(commitProgress);
+    filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
 
     // Update the displayed time
     const formattedTime = commitMaxTime.toLocaleString('en-US', {
@@ -318,21 +323,18 @@ function updateCommitFilter(value) {
 
     // Update the displayed time
     d3.select("#selectedTime").text(formattedTime);
-
-    // Filter commits and update scatterplot
-    d3.selectAll("circle")
-        .classed("hidden", d => d.datetime > commitMaxTime);
 }
 
 document.addEventListener('DOMContentLoaded', async () =>{
     await loadData();
-    createScatterplot();
+    updateScatterplot(commits);
     brushSelector();
     updateTooltipVisibility(false);
     updateCommitFilter(commitProgress)
     // Event listener for slider
     d3.select("#commit-slider").on("input", function() {
         updateCommitFilter(this.value);
+        updateScatterplot(filteredCommits)
 });
 });
 
