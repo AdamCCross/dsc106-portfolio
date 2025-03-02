@@ -149,10 +149,15 @@ function updateScatterplot(filteredCommits) {
 
     // Update axes
     const xAxis = d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat("%b %d")); // Format date labels
-    const yAxis = d3.axisLeft(yScale).ticks(5);
+    const yAxis = d3.axisLeft(yScale).ticks(12).tickSize(-usableArea.width);
 
     svg.select(".x-axis").transition().duration(500).call(xAxis);
     svg.select(".y-axis").transition().duration(500).call(yAxis);
+
+    // Add grid lines with light grey color
+    svg.selectAll('.y-axis line')
+        .style('stroke', '#d3d3d3')  // Light grey color for grid lines
+        .style('stroke-width', 1);  // Set the grid line thickness
 
     // Select or create dots group
     let dots = svg.select('.dots');
@@ -179,6 +184,17 @@ function updateScatterplot(filteredCommits) {
         .attr('r', 0) // Start with radius 0
         .style('fill-opacity', 0)
         .attr('fill', 'steelblue')
+        .on('mouseover', function(event, d) {
+            updateTooltipContent(d);
+            updateTooltipPosition(event);
+            updateTooltipVisibility(true);
+        })
+        .on('mousemove', function(event) {
+            updateTooltipPosition(event);
+        })
+        .on('mouseout', function() {
+            updateTooltipVisibility(false);
+        })
         .transition()
         .duration(500)
         .attr('r', d => rScale(d.totalLines))
@@ -213,8 +229,8 @@ function updateTooltipVisibility(isVisible) {
 
 function updateTooltipPosition(event) {
     const tooltip = document.getElementById('commit-tooltip');
-    tooltip.style.left = `${event.clientX}px`;
-    tooltip.style.top = `${event.clientY}px`;
+    tooltip.style.left = `${event.clientX + 10}px`;
+    tooltip.style.top = `${event.clientY + 10}px`;
 }
 
 function brushSelector() {

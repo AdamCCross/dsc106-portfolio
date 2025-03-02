@@ -325,6 +325,8 @@ circle {
 
 circle:hover {
   transform: scale(1.5);
+  transition: 200ms;
+  fill: #ff6b6b;
 }
 
 /* Style chart brusk selection */
