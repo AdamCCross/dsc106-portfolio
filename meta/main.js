@@ -147,9 +147,18 @@ function updateScatterplot(filteredCommits) {
         .range([usableArea.bottom, usableArea.top])
         .nice();
 
+    // Format the y-axis ticks as times (e.g., "12:00 AM", "1:00 AM")
+    const timeFormat = d3.timeFormat('%I:%M %p');  // Format for "12:00 AM", "1:00 AM", etc.
+
     // Update axes
-    const xAxis = d3.axisBottom(xScale).ticks(5).tickFormat(d3.timeFormat("%b %d")); // Format date labels
-    const yAxis = d3.axisLeft(yScale).ticks(12).tickSize(-usableArea.width);
+    const xAxis = d3.axisBottom(xScale)
+        .ticks(5)
+        .tickFormat(d3.timeFormat("%b %d")); // Format date labels
+
+    const yAxis = d3.axisLeft(yScale)
+        .ticks(12)
+        .tickSize(-usableArea.width)
+        .tickFormat(d => timeFormat(new Date(0, 0, 0, d, 0)));  // Format as time
 
     svg.select(".x-axis").transition().duration(500).call(xAxis);
     svg.select(".y-axis").transition().duration(500).call(yAxis);
