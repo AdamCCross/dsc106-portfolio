@@ -347,6 +347,7 @@ function updateFileVisualization(filteredCommits) {
             return { name, lines };
         });
     files = d3.sort(files, (d) => -d.lines.length);
+    let fileTypeColors = d3.scaleOrdinal(d3.schemeTableau10);
 
     d3.select('.files').selectAll('div').remove();
     let filesContainer = d3.select('.files').selectAll('div').data(files).enter().append('div');
@@ -360,9 +361,7 @@ function updateFileVisualization(filteredCommits) {
         .enter()
         .append('div')
         .attr('class', 'line')  // Apply the 'line' class for styling
-        .style('height', '4px')  // Example height of each line (you can adjust this)
-        .style('margin-bottom', '2px')  // Space between the lines
-        .style('background-color', '#3498db');  // Example color for each line (adjust as needed)
+        .style('background', d => fileTypeColors(d.type))  // Example color for each line (adjust as needed)
 }
 
 document.addEventListener('DOMContentLoaded', async () =>{
